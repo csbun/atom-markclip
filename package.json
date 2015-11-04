@@ -1,0 +1,34 @@
+{
+  "name": "markclip",
+  "main": "./lib/markclip",
+  "version": "0.0.1",
+  "description": "An Atom package to insert image form clipboard into markdown file",
+  "keywords": [
+    "atom",
+    "package",
+    "markdown",
+    "clipboard",
+    "image"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/csbun/atom-markclip.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+    "md5": "^2.0.0",
+    "mkdirp": "^0.5.1"
+  },
+  "bugs": {
+    "url": "https://github.com/csbun/atom-markclip/issues"
+  },
+  "homepage": "https://github.com/csbun/atom-markclip#readme",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hans Chan <icsbun@gmail.com>"
+}
