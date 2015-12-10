@@ -42,10 +42,10 @@ module.exports = Markclip =
     return if FILE_EXT.indexOf(filePathObj.ext) < 0
 
     saveType = atom.config.get('markclip.saveType')
-    # IF: save as a file
+    # IF:saveType: save as a file
     if (saveType == SAVE_TYPE_FILE_IN_FOLDER || saveType == SAVE_TYPE_FILE)
       imgFileDir = filePathObj.dir
-      # IF: SAVE IN FOLDER, create it
+      # IF:saveType: SAVE IN FOLDER, create it
       if saveType == SAVE_TYPE_FILE_IN_FOLDER
         imgFileDir = path.join(imgFileDir, filePathObj.name)
         mkdirp.sync(imgFileDir)
@@ -53,7 +53,7 @@ module.exports = Markclip =
       imgFilePath = path.join(imgFileDir, md5(img.toDataUrl()).replace('=', '') + '.png')
       fs.writeFileSync(imgFilePath, img.toPng());
       @insertImgIntoEditor(textEditor, path.relative(filePathObj.dir, imgFilePath))
-    # IF: save as base64
+    # IF:saveType: save as base64
     else
       @insertImgIntoEditor(textEditor, img.toDataUrl())
 
