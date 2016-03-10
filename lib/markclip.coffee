@@ -47,7 +47,7 @@ module.exports = Markclip =
       imgFileDir = filePathObj.dir
       # IF:saveType: SAVE IN FOLDER, create it
       if saveType == SAVE_TYPE_FILE_IN_FOLDER
-        imgFileDir = path.join(imgFileDir, filePathObj.name)
+        imgFileDir = path.join(imgFileDir, filePathObj.name+'-images')
         mkdirp.sync(imgFileDir)
       # create file with md5 name
       imgFilePath = path.join(imgFileDir, md5(img.toDataUrl()).replace('=', '') + '.png')
