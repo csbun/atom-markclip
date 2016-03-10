@@ -40,12 +40,12 @@ Create a directory with the same name of the current markdown file. Put the imag
 ```
 path
 ├── markdown-file-name.md
-├── markdown-file-name
-│   ├── image-md5-name.png
+├── markdown-file-name-images
+│   ├── image-md5-name-images.png
 │   └── ...
 └── ...
 ```
 
 ```
-![](markdown-file-name/image-md5-name.png)
+![](markdown-file-name-images/image-md5-name.png)
 ```
