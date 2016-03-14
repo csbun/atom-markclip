@@ -1,7 +1,7 @@
 {
   "name": "markclip",
   "main": "./lib/markclip",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "An Atom package to insert image form clipboard into markdown file",
   "keywords": [
     "atom",
