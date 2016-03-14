@@ -10,6 +10,8 @@ SAVE_TYPE_BASE64 = 'base64'
 SAVE_TYPE_FILE = 'file'
 SAVE_TYPE_FILE_IN_FOLDER = 'file in folder'
 FILE_EXT = ['.md', '.markdown', '.mdown', '.mkd', '.mkdown']
+SPACE_REPLACER = '-';
+SPACE_REG = /\s+/g;
 
 module.exports = Markclip =
   config:
@@ -18,6 +20,10 @@ module.exports = Markclip =
       description: 'Where to save the clipboard image file'
       default: SAVE_TYPE_BASE64
       enum: [SAVE_TYPE_BASE64, SAVE_TYPE_FILE, SAVE_TYPE_FILE_IN_FOLDER]
+    folderSpaceReplacer:
+      type: 'string'
+      description: 'A charset to replace spaces in image floder name'
+      default: SPACE_REPLACER
 
   handleCtrlVEvent: () ->
     textEditor = atom.workspace.getActiveTextEditor()
@@ -47,7 +53,8 @@ module.exports = Markclip =
       imgFileDir = filePathObj.dir
       # IF:saveType: SAVE IN FOLDER, create it
       if saveType == SAVE_TYPE_FILE_IN_FOLDER
-        imgFileDir = path.join(imgFileDir, filePathObj.name)
+        folderSpaceReplacer = atom.config.get('markclip.folderSpaceReplacer').replace(SPACE_REG, '') || SPACE_REPLACER;
+        imgFileDir = path.join(imgFileDir, filePathObj.name.replace(SPACE_REG, folderSpaceReplacer))
         mkdirp.sync(imgFileDir)
       # create file with md5 name
       imgFilePath = path.join(imgFileDir, md5(img.toDataUrl()).replace('=', '') + '.png')

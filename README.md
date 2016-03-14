@@ -49,3 +49,7 @@ path
 ```
 ![](markdown-file-name/image-md5-name.png)
 ```
+
+### folderSpaceReplacer
+
+Replace spaces to special charset in image folder name while using setting `saveType: file in folder`. Default to `-`.
