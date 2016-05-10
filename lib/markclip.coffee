@@ -76,3 +76,11 @@ module.exports = Markclip =
       if e.keystrokes == 'ctrl-v' || e.keystrokes == 'cmd-v'
         @handleCtrlVEvent()
     )
+
+    # atom.contextMenu.add {
+    #   'atom-text-editor': [{
+    #     label: 'Bookmark-----',
+    #     command: 'my-package:toggle'
+    #   }]
+    # }
+    # console.log 'abc'
