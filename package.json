@@ -28,7 +28,7 @@
   "homepage": "https://github.com/csbun/atom-markclip#readme",
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "publish": "apm publish 0.2.4"
   },
   "author": "Hans Chan <icsbun@gmail.com>"
 }
