@@ -1,4 +1,3 @@
-
 fs = require 'fs'
 path = require 'path'
 mkdirp = require 'mkdirp'
@@ -9,6 +8,7 @@ TAG_TEXT_EDITOR = 'ATOM-TEXT-EDITOR'
 SAVE_TYPE_BASE64 = 'base64'
 SAVE_TYPE_FILE = 'file'
 SAVE_TYPE_FILE_IN_FOLDER = 'file in folder'
+SAVE_TYPE_CUSTOM_FILE = 'custom file'
 FILE_EXT = ['.md', '.markdown', '.mdown', '.mkd', '.mkdown']
 SPACE_REPLACER = '-';
 SPACE_REG = /\s+/g;
@@ -19,7 +19,7 @@ module.exports = Markclip =
       type: 'string'
       description: 'Where to save the clipboard image file'
       default: SAVE_TYPE_BASE64
-      enum: [SAVE_TYPE_BASE64, SAVE_TYPE_FILE, SAVE_TYPE_FILE_IN_FOLDER]
+      enum: [SAVE_TYPE_BASE64, SAVE_TYPE_FILE, SAVE_TYPE_FILE_IN_FOLDER, SAVE_TYPE_CUSTOM_FILE]
     folderSpaceReplacer:
       type: 'string'
       description: 'A charset to replace spaces in image floder name'
@@ -50,7 +50,7 @@ module.exports = Markclip =
     saveType = atom.config.get('markclip.saveType')
     # atom 1.12 img.toDataURL / atom 1.11 img.toDataUrl
     imgDataURL = if img.toDataURL then img.toDataURL() else img.toDataUrl()
-    # IF:saveType: save as a file
+    # IF:saveType: SAVE AS A FILE
     if (saveType == SAVE_TYPE_FILE_IN_FOLDER || saveType == SAVE_TYPE_FILE)
       imgFileDir = filePathObj.dir
       # IF:saveType: SAVE IN FOLDER, create it
@@ -59,15 +59,25 @@ module.exports = Markclip =
         imgFileDir = path.join(imgFileDir, filePathObj.name.replace(SPACE_REG, folderSpaceReplacer))
         mkdirp.sync(imgFileDir)
       # create file with md5 name
-      imgFilePath = path.join(imgFileDir, md5(imgDataURL).replace('=', '') + '.png')
+      imgFilePath = path.join(imgFileDir, @getDefaultImageName(imgDataURL))
       fs.writeFileSync(imgFilePath, img.toPng());
       @insertImgIntoEditor(textEditor, path.relative(filePathObj.dir, imgFilePath))
-    # IF:saveType: save as base64
+    # IF:saveType: CUSTOM FILE
+    else if saveType == SAVE_TYPE_CUSTOM_FILE
+      newItemPath = atom.applicationDelegate.showSaveDialog({
+        defaultPath: path.join(filePathObj.dir, @getDefaultImageName(imgDataURL))
+      })
+      if newItemPath
+        fs.writeFileSync(newItemPath, img.toPng());
+        @insertImgIntoEditor(textEditor, path.relative(filePathObj.dir, newItemPath))
+    # IF:saveType: SAVE AS BASE64
     else
       @insertImgIntoEditor(textEditor, imgDataURL)
 
   insertImgIntoEditor: (textEditor, src) ->
-    textEditor.insertText('![](' + src + ')\n')
+    textEditor.insertText("![](#{src})\n")
+  getDefaultImageName: (imgDataURL) ->
+    return md5(imgDataURL).replace('=', '') + '.png'
 
   activate: (state) ->
     # bind keymaps

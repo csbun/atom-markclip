@@ -1,7 +1,7 @@
 {
   "name": "markclip",
   "main": "./lib/markclip",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "An Atom package to insert image form clipboard into markdown file",
   "keywords": [
     "atom",
@@ -28,7 +28,8 @@
   "homepage": "https://github.com/csbun/atom-markclip#readme",
   "devDependencies": {},
   "scripts": {
-    "publish": "apm publish 0.2.4"
+    "publish": "apm publish 0.3.0",
+    "dev": "apm link"
   },
   "author": "Hans Chan <icsbun@gmail.com>"
 }
