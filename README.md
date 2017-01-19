@@ -10,7 +10,7 @@ Copy some image into clipboard and key `cmd-v` (Mac) or `ctrl-v` (Windows) in ma
 
 ### saveType
 
-- **base64**
+#### **base64**
 
 Insert base64 string like
 
@@ -18,7 +18,7 @@ Insert base64 string like
 ![](data:image/png;base64,...)
 ```
 
-- **file**
+#### **file**
 
 Create an image file in the same directory of your markdown file, then insert into markdown with a md5 file name.
 
@@ -33,7 +33,7 @@ path
 ![](image-md5-name.png)
 ```
 
-- **file in folder**
+#### **file in folder**
 
 Create a directory with the same name of the current markdown file. Put the image in the directory, then insert into markdown with a md5 file name.
 
@@ -50,7 +50,26 @@ path
 ![](markdown-file-name/image-md5-name.png)
 ```
 
-- **custom file**
+#### **default folder**
+
+Create a directory with the name specified in the settings (defaults to 'img'). Put the image in the directory, then insert into markdown with an md5 file name.
+
+```
+path
+├── markdown-file-name.md
+├── img
+│   ├── image-md5-name.png
+│   └── ...
+└── ...
+```
+
+```
+![](img/image-md5-name.png)
+```
+
+*Use Case*: having a common image directory for a collection of markdown files all in the same folder (e.g. wikis). Reduces the number of image directories compared to **file in folder**.
+
+#### **custom file**
 
 Ask to save each time.
 
