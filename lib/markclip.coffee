@@ -23,10 +23,10 @@ module.exports = Markclip =
       enum: [SAVE_TYPE_BASE64, SAVE_TYPE_FILE, SAVE_TYPE_FILE_IN_FOLDER, SAVE_TYPE_CUSTOM_FILE]
     folderSpaceReplacer:
       type: 'string'
-      description: 'A charset to replace spaces in image floder name'
+      description: 'A charset to replace spaces in image folder name'
       default: SPACE_REPLACER
 
-  handleInsertEvent: () ->
+  handleInsertEvent: (e) ->
     textEditor = atom.workspace.getActiveTextEditor()
     # do nothing if there is no ActiveTextEditor
     return if !textEditor
@@ -34,7 +34,9 @@ module.exports = Markclip =
     # CHECK: do nothing if no image
     clipboard = require('clipboard')
     img = clipboard.readImage()
-    return if img.isEmpty()
+    if img.isEmpty()
+      e.abortKeyBinding()
+      return
 
     # CHECK: do nothing with unsaved file
     filePath = textEditor.getPath()
@@ -85,7 +87,7 @@ module.exports = Markclip =
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-workspace',
-      'markclip:insert': => @handleInsertEvent()
+      'markclip:insert': (e) => @handleInsertEvent(e)
 
     # atom.contextMenu.add {
     #   'atom-text-editor': [{
