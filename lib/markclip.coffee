@@ -88,6 +88,10 @@ module.exports = Markclip =
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-workspace',
       'markclip:insert': (e) => @handleInsertEvent(e)
+    @subscriptions.add atom.config.observe 'markclip.saveType', (val) ->
+      saveType = val
+    @subscriptions.add atom.config.observe 'markclip.folderSpaceReplacer', (val) ->
+      folderSpaceReplacer = val
 
     # atom.contextMenu.add {
     #   'atom-text-editor': [{
