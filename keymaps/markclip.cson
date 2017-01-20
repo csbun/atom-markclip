@@ -1,0 +1,2 @@
+'atom-text-editor[data-grammar=\'source md\'], atom-text-editor[data-grammar=\'source gfm\'], atom-text-editor[data-grammar=\'text html basic\'], atom-text-editor[data-grammar=\'text md\'], atom-text-editor[data-grammar=\'text plain\'], atom-text-editor[data-grammar=\'text plain null-grammar\']':
+    "ctrl-v": "markclip:insert"

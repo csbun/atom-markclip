@@ -3,6 +3,7 @@ path = require 'path'
 mkdirp = require 'mkdirp'
 md5 = require 'md5'
 PKG = require '../package.json'
+{CompositeDisposable} = require 'atom'
 
 TAG_TEXT_EDITOR = 'ATOM-TEXT-EDITOR'
 SAVE_TYPE_BASE64 = 'base64'
@@ -22,10 +23,10 @@ module.exports = Markclip =
       enum: [SAVE_TYPE_BASE64, SAVE_TYPE_FILE, SAVE_TYPE_FILE_IN_FOLDER, SAVE_TYPE_CUSTOM_FILE]
     folderSpaceReplacer:
       type: 'string'
-      description: 'A charset to replace spaces in image floder name'
+      description: 'A charset to replace spaces in image folder name'
       default: SPACE_REPLACER
 
-  handleCtrlVEvent: () ->
+  handleInsertEvent: (e) ->
     textEditor = atom.workspace.getActiveTextEditor()
     # do nothing if there is no ActiveTextEditor
     return if !textEditor
@@ -33,7 +34,9 @@ module.exports = Markclip =
     # CHECK: do nothing if no image
     clipboard = require('clipboard')
     img = clipboard.readImage()
-    return if img.isEmpty()
+    if img.isEmpty()
+      e.abortKeyBinding()
+      return
 
     # CHECK: do nothing with unsaved file
     filePath = textEditor.getPath()
@@ -79,15 +82,16 @@ module.exports = Markclip =
   getDefaultImageName: (imgDataURL) ->
     return md5(imgDataURL).replace('=', '') + '.png'
 
+  subscriptions: null
   activate: (state) ->
-    # bind keymaps
-    atom.keymaps.onDidMatchBinding((e) =>
-      # CHECK: target is TAG_TEXT_EDITOR
-      return if ((e.keyboardEventTarget || '').tagName || '') != TAG_TEXT_EDITOR
-      # CHECK: cmd-v or ctrl-v
-      if e.keystrokes == 'ctrl-v' || e.keystrokes == 'cmd-v'
-        @handleCtrlVEvent()
-    )
+    # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
+    @subscriptions = new CompositeDisposable
+    @subscriptions.add atom.commands.add 'atom-workspace',
+      'markclip:insert': (e) => @handleInsertEvent(e)
+    @subscriptions.add atom.config.observe 'markclip.saveType', (val) ->
+      saveType = val
+    @subscriptions.add atom.config.observe 'markclip.folderSpaceReplacer', (val) ->
+      folderSpaceReplacer = val
 
     # atom.contextMenu.add {
     #   'atom-text-editor': [{
@@ -96,3 +100,6 @@ module.exports = Markclip =
     #   }]
     # }
     # console.log 'abc'
+
+  deactivate: ->
+    @subscriptions.dispose()
