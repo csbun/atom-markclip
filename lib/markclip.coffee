@@ -30,6 +30,7 @@ module.exports = Markclip =
       order: 20
     defaultFolder:
       type: 'string'
+      description: "A folder to save image, use with `saveType = #{SAVE_TYPE_DEFAULT_FOLDER}`"
       default: 'img'
       order: 30
 
@@ -61,15 +62,13 @@ module.exports = Markclip =
     # atom 1.12 img.toDataURL / atom 1.11 img.toDataUrl
     imgDataURL = if img.toDataURL then img.toDataURL() else img.toDataUrl()
     # IF:saveType: SAVE AS A FILE
-    if (saveType == SAVE_TYPE_FILE_IN_FOLDER || saveType == SAVE_TYPE_FILE)
+    if saveType == SAVE_TYPE_FILE_IN_FOLDER || saveType == SAVE_TYPE_FILE || saveType == SAVE_TYPE_DEFAULT_FOLDER
       imgFileDir = filePathObj.dir
       # IF:saveType: SAVE IN FOLDER or SAVE IN DEFAULT FOLDER, create it
       if saveType == SAVE_TYPE_FILE_IN_FOLDER || saveType == SAVE_TYPE_DEFAULT_FOLDER
         folderSpaceReplacer = atom.config.get('markclip.folderSpaceReplacer').replace(SPACE_REG, '') || SPACE_REPLACER;
-        if saveType == SAVE_TYPE_FILE_IN_FOLDER
-          imgFileDir = path.join(imgFileDir, filePathObj.name.replace(SPACE_REG, folderSpaceReplacer))
-        else
-          imgFileDir = path.join(imgFileDir, atom.config.get('markclip.defaultFolder').replace(SPACE_REG, folderSpaceReplacer))
+        folderName = if saveType == SAVE_TYPE_FILE_IN_FOLDER then filePathObj.name else atom.config.get('markclip.defaultFolder');
+        imgFileDir = path.join(imgFileDir, folderName.replace(SPACE_REG, folderSpaceReplacer))
         mkdirp.sync(imgFileDir)
       # create file with md5 name
       imgFilePath = path.join(imgFileDir, @getDefaultImageName(imgDataURL))
