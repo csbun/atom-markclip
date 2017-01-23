@@ -9,6 +9,7 @@ TAG_TEXT_EDITOR = 'ATOM-TEXT-EDITOR'
 SAVE_TYPE_BASE64 = 'base64'
 SAVE_TYPE_FILE = 'file'
 SAVE_TYPE_FILE_IN_FOLDER = 'file in folder'
+SAVE_TYPE_DEFAULT_FOLDER = 'default folder'
 SAVE_TYPE_CUSTOM_FILE = 'custom file'
 FILE_EXT = ['.md', '.markdown', '.mdown', '.mkd', '.mkdown']
 SPACE_REPLACER = '-';
@@ -20,11 +21,17 @@ module.exports = Markclip =
       type: 'string'
       description: 'Where to save the clipboard image file'
       default: SAVE_TYPE_BASE64
-      enum: [SAVE_TYPE_BASE64, SAVE_TYPE_FILE, SAVE_TYPE_FILE_IN_FOLDER, SAVE_TYPE_CUSTOM_FILE]
+      enum: [SAVE_TYPE_BASE64, SAVE_TYPE_FILE, SAVE_TYPE_FILE_IN_FOLDER, SAVE_TYPE_DEFAULT_FOLDER, SAVE_TYPE_CUSTOM_FILE]
+      order: 10
     folderSpaceReplacer:
       type: 'string'
       description: 'A charset to replace spaces in image folder name'
       default: SPACE_REPLACER
+      order: 20
+    defaultFolder:
+      type: 'string'
+      default: 'img'
+      order: 30
 
   handleInsertEvent: (e) ->
     textEditor = atom.workspace.getActiveTextEditor()
@@ -56,10 +63,13 @@ module.exports = Markclip =
     # IF:saveType: SAVE AS A FILE
     if (saveType == SAVE_TYPE_FILE_IN_FOLDER || saveType == SAVE_TYPE_FILE)
       imgFileDir = filePathObj.dir
-      # IF:saveType: SAVE IN FOLDER, create it
-      if saveType == SAVE_TYPE_FILE_IN_FOLDER
+      # IF:saveType: SAVE IN FOLDER or SAVE IN DEFAULT FOLDER, create it
+      if saveType == SAVE_TYPE_FILE_IN_FOLDER || saveType == SAVE_TYPE_DEFAULT_FOLDER
         folderSpaceReplacer = atom.config.get('markclip.folderSpaceReplacer').replace(SPACE_REG, '') || SPACE_REPLACER;
-        imgFileDir = path.join(imgFileDir, filePathObj.name.replace(SPACE_REG, folderSpaceReplacer))
+        if saveType == SAVE_TYPE_FILE_IN_FOLDER
+          imgFileDir = path.join(imgFileDir, filePathObj.name.replace(SPACE_REG, folderSpaceReplacer))
+        else
+          imgFileDir = path.join(imgFileDir, atom.config.get('markclip.defaultFolder').replace(SPACE_REG, folderSpaceReplacer))
         mkdirp.sync(imgFileDir)
       # create file with md5 name
       imgFilePath = path.join(imgFileDir, @getDefaultImageName(imgDataURL))
