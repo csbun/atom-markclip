@@ -72,7 +72,8 @@ module.exports = Markclip =
         mkdirp.sync(imgFileDir)
       # create file with md5 name
       imgFilePath = path.join(imgFileDir, @getDefaultImageName(imgDataURL))
-      fs.writeFileSync(imgFilePath, img.toPNG());
+      imgPNG = if img.toPNG then img.toPNG() else img.toPng()
+      fs.writeFileSync(imgFilePath, imgPNG);
       @insertImgIntoEditor(textEditor, path.relative(filePathObj.dir, imgFilePath))
     # IF:saveType: CUSTOM FILE
     else if saveType == SAVE_TYPE_CUSTOM_FILE
@@ -80,7 +81,8 @@ module.exports = Markclip =
         defaultPath: path.join(filePathObj.dir, @getDefaultImageName(imgDataURL))
       })
       if newItemPath
-        fs.writeFileSync(newItemPath, img.toPNG());
+        imgPNG = if img.toPNG then img.toPNG() else img.toPng()
+        fs.writeFileSync(newItemPath, imgPNG);
         @insertImgIntoEditor(textEditor, path.relative(filePathObj.dir, newItemPath))
     # IF:saveType: SAVE AS BASE64
     else
