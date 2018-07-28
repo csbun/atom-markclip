@@ -10,10 +10,6 @@
     "clipboard",
     "image"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/csbun/atom-markclip.git"
-  },
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
@@ -28,7 +24,7 @@
   "homepage": "https://github.com/csbun/atom-markclip#readme",
   "devDependencies": {},
   "scripts": {
-    "publish": "apm publish 0.3.0",
+    "publish": "apm publish patch",
     "dev": "apm link"
   },
   "author": "Hans Chan <icsbun@gmail.com>"
