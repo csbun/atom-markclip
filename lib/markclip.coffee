@@ -74,7 +74,7 @@ module.exports = Markclip =
       imgFilePath = path.join(imgFileDir, @getDefaultImageName(imgDataURL))
       imgPNG = if img.toPNG then img.toPNG() else img.toPng()
       fs.writeFileSync(imgFilePath, imgPNG);
-      @insertImgIntoEditor(textEditor, path.relative(filePathObj.dir, imgFilePath))
+      @insertImgIntoEditor(textEditor, path.relative(filePathObj.dir, imgFilePath).replace(/\\/g, '/'))
     # IF:saveType: CUSTOM FILE
     else if saveType == SAVE_TYPE_CUSTOM_FILE
       newItemPath = atom.applicationDelegate.showSaveDialog({
@@ -83,7 +83,7 @@ module.exports = Markclip =
       if newItemPath
         imgPNG = if img.toPNG then img.toPNG() else img.toPng()
         fs.writeFileSync(newItemPath, imgPNG);
-        @insertImgIntoEditor(textEditor, path.relative(filePathObj.dir, newItemPath))
+        @insertImgIntoEditor(textEditor, path.relative(filePathObj.dir, newItemPath.replace(/\\/g, '/')))
     # IF:saveType: SAVE AS BASE64
     else
       @insertImgIntoEditor(textEditor, imgDataURL)
