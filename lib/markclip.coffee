@@ -40,7 +40,7 @@ module.exports = Markclip =
     return if !textEditor
 
     # CHECK: do nothing if no image
-    clipboard = require('clipboard')
+    clipboard = require('electron').clipboard
     img = clipboard.readImage()
     if img.isEmpty()
       e.abortKeyBinding()
