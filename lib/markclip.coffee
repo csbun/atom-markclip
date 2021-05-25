@@ -11,7 +11,6 @@ SAVE_TYPE_FILE = 'file'
 SAVE_TYPE_FILE_IN_FOLDER = 'file in folder'
 SAVE_TYPE_DEFAULT_FOLDER = 'default folder'
 SAVE_TYPE_CUSTOM_FILE = 'custom file'
-FILE_EXT = ['.md', '.markdown', '.mdown', '.mkd', '.mkdown']
 SPACE_REPLACER = '-';
 SPACE_REG = /\s+/g;
 
@@ -33,6 +32,12 @@ module.exports = Markclip =
       description: "A folder to save image, use with `saveType = #{SAVE_TYPE_DEFAULT_FOLDER}`"
       default: 'img'
       order: 30
+    fileExt:
+      type: 'array'
+      description: 'File extensions of markdown files'
+      default: ['.md', '.markdown', '.mdown', '.mkd', '.mkdown']
+      order: 40
+
 
   handleInsertEvent: (e) ->
     textEditor = atom.workspace.getActiveTextEditor()
@@ -46,17 +51,19 @@ module.exports = Markclip =
       e.abortKeyBinding()
       return
 
+    fileExt = atom.config.get('markclip.fileExt')
+
     # CHECK: do nothing with unsaved file
     filePath = textEditor.getPath()
     if not filePath
       atom.notifications.addWarning(PKG.name + ': Markdown file NOT saved', {
-        detail: 'save your file as ' + FILE_EXT.map((n) => '"' + n + '"').join(', ')
+        detail: 'save your file as ' + fileExt.map((n) => '"' + n + '"').join(', ')
       })
       return
 
-    # CHECK: file type should in FILE_EXT
+    # CHECK: file type should in fileExt
     filePathObj = path.parse(filePath)
-    return if FILE_EXT.indexOf(filePathObj.ext) < 0
+    return if fileExt.indexOf(filePathObj.ext) < 0
 
     saveType = atom.config.get('markclip.saveType')
     # atom 1.12 img.toDataURL / atom 1.11 img.toDataUrl
